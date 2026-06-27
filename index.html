@@ -10,12 +10,9 @@ html, body {
 margin: 0;
 height: 100%;
 overflow: hidden;
-
-/* unified dark screen */
 background: #050505;
-
-font-family: Arial, sans-serif;
 color: white;
+font-family: Arial, sans-serif;
 }
 
 /* BOOT SCREEN */
@@ -97,10 +94,10 @@ opacity: 0.03;
 mix-blend-mode: overlay;
 }
 
-/* CENTERED CONTENT */
+/* CENTERED CONTENT (MOVED UP) */
 .container {
 position: absolute;
-top: 48%;
+top: 44%; /* 👈 higher than before */
 left: 50%;
 transform: translate(-50%, -50%);
 z-index: 5;
@@ -117,19 +114,25 @@ animation: drift 4s infinite;
 50% { transform: translate(calc(-50% + 1px), calc(-50% - 1px)); }
 }
 
-/* IMAGE */
+/* GIF FIX (NO BOX FEEL) */
 img {
+display: block;
+
 max-width: 80%;
 max-height: 60vh;
 object-fit: contain;
 
-filter: drop-shadow(0 0 30px rgba(255,255,255,0.05));
+background: transparent;
+border: none;
+outline: none;
+
+filter: drop-shadow(0 0 40px rgba(255,255,255,0.04));
 
 mask-image: radial-gradient(circle,
-rgba(0,0,0,1) 60%,
+rgba(0,0,0,1) 65%,
 rgba(0,0,0,0) 100%);
 -webkit-mask-image: radial-gradient(circle,
-rgba(0,0,0,1) 60%,
+rgba(0,0,0,1) 65%,
 rgba(0,0,0,0) 100%);
 }
 
@@ -165,28 +168,15 @@ background: white;
 color: black;
 }
 
-/* ICONS */
 .icon {
 width: 18px;
 height: 18px;
-}
-
-/* flicker */
-body {
-animation: flicker 6s infinite;
-}
-
-@keyframes flicker {
-0%,100% { opacity: 1; }
-50% { opacity: 0.992; }
-52% { opacity: 1; }
 }
 </style>
 </head>
 
 <body>
 
-<!-- BOOT SCREEN -->
 <div id="boot">INITIALIZING SYSTEM...</div>
 
 <div class="noise"></div>
@@ -215,7 +205,6 @@ Discord
 
 </div>
 
-<!-- AUDIO -->
 <audio id="bgAudio" preload="auto" loop>
   <source src="vhs.mp3" type="audio/mpeg">
 </audio>
