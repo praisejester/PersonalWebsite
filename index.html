@@ -42,7 +42,7 @@ animation: bootFade 3s forwards;
 100% { opacity: 0; visibility: hidden; }
 }
 
-/* VIGNETTE */
+/* VIGNETTE (NOW SLIGHT RED HORROR TINT) */
 body::before {
 content: "";
 position: fixed;
@@ -54,8 +54,18 @@ pointer-events: none;
 z-index: 1;
 
 background: radial-gradient(circle,
-rgba(0,0,0,0) 40%,
-rgba(0,0,0,0.75) 100%);
+rgba(0,0,0,0) 35%,
+rgba(0,0,0,0.85) 100%),
+radial-gradient(circle at 20% 20%,
+rgba(120,0,0,0.08),
+transparent 40%);
+
+animation: pulseRed 8s infinite;
+}
+
+@keyframes pulseRed {
+0%,100% { filter: hue-rotate(0deg); opacity: 1; }
+50% { opacity: 0.9; }
 }
 
 /* SCANLINES */
@@ -78,6 +88,12 @@ transparent 6px
 );
 
 opacity: 0.25;
+animation: scanMove 6s linear infinite;
+}
+
+@keyframes scanMove {
+0% { transform: translateY(0); }
+100% { transform: translateY(8px); }
 }
 
 /* NOISE */
@@ -90,14 +106,23 @@ height: 100%;
 pointer-events: none;
 z-index: 3;
 background: url("https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Random_Noise.png");
-opacity: 0.03;
+opacity: 0.035;
 mix-blend-mode: overlay;
+animation: noiseMove 0.12s infinite;
 }
 
-/* CENTERED CONTENT (MOVED UP) */
+@keyframes noiseMove {
+0% { transform: translate(0,0); }
+25% { transform: translate(-2px,1px); }
+50% { transform: translate(1px,-1px); }
+75% { transform: translate(-1px,2px); }
+100% { transform: translate(0,0); }
+}
+
+/* CENTER */
 .container {
 position: absolute;
-top: 44%; /* 👈 higher than before */
+top: 44%;
 left: 50%;
 transform: translate(-50%, -50%);
 z-index: 5;
@@ -114,7 +139,7 @@ animation: drift 4s infinite;
 50% { transform: translate(calc(-50% + 1px), calc(-50% - 1px)); }
 }
 
-/* GIF FIX (NO BOX FEEL) */
+/* IMAGE (CREPPY PRESENCE FEEL) */
 img {
 display: block;
 
@@ -123,17 +148,23 @@ max-height: 60vh;
 object-fit: contain;
 
 background: transparent;
-border: none;
-outline: none;
 
-filter: drop-shadow(0 0 40px rgba(255,255,255,0.04));
+filter: drop-shadow(0 0 50px rgba(255,255,255,0.03))
+        contrast(1.05);
 
 mask-image: radial-gradient(circle,
-rgba(0,0,0,1) 65%,
+rgba(0,0,0,1) 60%,
 rgba(0,0,0,0) 100%);
 -webkit-mask-image: radial-gradient(circle,
-rgba(0,0,0,1) 65%,
+rgba(0,0,0,1) 60%,
 rgba(0,0,0,0) 100%);
+
+animation: breathe 6s ease-in-out infinite;
+}
+
+@keyframes breathe {
+0%,100% { transform: scale(1); }
+50% { transform: scale(1.02); }
 }
 
 /* SOCIALS */
@@ -143,7 +174,6 @@ display: flex;
 gap: 20px;
 }
 
-/* LINKS */
 a {
 display: flex;
 align-items: center;
@@ -168,9 +198,21 @@ background: white;
 color: black;
 }
 
+/* ICON */
 .icon {
 width: 18px;
 height: 18px;
+}
+
+/* RANDOM GLITCH FLASH */
+.glitchFlash {
+position: fixed;
+inset: 0;
+background: white;
+opacity: 0;
+pointer-events: none;
+z-index: 10;
+mix-blend-mode: difference;
 }
 </style>
 </head>
@@ -178,12 +220,12 @@ height: 18px;
 <body>
 
 <div id="boot">INITIALIZING SYSTEM...</div>
-
 <div class="noise"></div>
+<div class="glitchFlash" id="flash"></div>
 
 <div class="container">
 
-<img src="https://i.pinimg.com/originals/8e/db/ed/8edbeddba6976c96b582e546aede2b44.gif">
+<img id="jester" src="https://i.pinimg.com/originals/8e/db/ed/8edbeddba6976c96b582e546aede2b44.gif">
 
 <div class="socials">
 
@@ -205,21 +247,17 @@ Discord
 
 </div>
 
-<audio id="bgAudio" preload="auto" loop>
-  <source src="vhs.mp3" type="audio/mpeg">
-</audio>
-
 <script>
-const audio = document.getElementById("bgAudio");
-audio.volume = 0.2;
+const flash = document.getElementById("flash");
+const jester = document.getElementById("jester");
 
-function startAudio() {
-    audio.play().catch(() => {});
+/* glitch flash bursts */
+setInterval(() => {
+if (Math.random() > 0.88) {
+flash.style.opacity = 0.08;
+setTimeout(() => flash.style.opacity = 0, 80);
 }
-
-window.addEventListener("click", startAudio, { once: true });
-window.addEventListener("touchstart", startAudio, { once: true });
-window.addEventListener("keydown", startAudio, { once: true });
+}, 500);
 </script>
 
 </body>
