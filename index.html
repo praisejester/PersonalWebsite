@@ -19,17 +19,47 @@ color: white;
 font-family: Arial, sans-serif;
 }
 
+/* subtle vignette overlay */
+body::before {
+content: "";
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+pointer-events: none;
+background: radial-gradient(circle at center,
+rgba(0,0,0,0) 40%,
+rgba(0,0,0,0.6) 100%);
+z-index: 0;
+}
+
+/* container stays above everything */
 .container {
 display: flex;
 flex-direction: column;
 align-items: center;
 transform: translateY(-40px);
+position: relative;
+z-index: 2;
 }
 
+/* GIF styling (fade edges + glow) */
 img {
 max-width: 80%;
 max-height: 60vh;
 object-fit: contain;
+
+/* glow effect */
+filter: drop-shadow(0 0 25px rgba(255,255,255,0.08));
+
+/* fade edges into black */
+mask-image: radial-gradient(circle,
+rgba(0,0,0,1) 55%,
+rgba(0,0,0,0) 100%);
+-webkit-mask-image: radial-gradient(circle,
+rgba(0,0,0,1) 55%,
+rgba(0,0,0,0) 100%);
 }
 
 .socials {
@@ -60,6 +90,17 @@ color: black;
 width: 18px;
 height: 18px;
 }
+
+/* optional subtle flicker vibe */
+body {
+animation: flicker 6s infinite;
+}
+
+@keyframes flicker {
+0%, 100% { opacity: 1; }
+50% { opacity: 0.98; }
+52% { opacity: 1; }
+}
 </style>
 </head>
 
@@ -89,7 +130,7 @@ Discord
 
 </div>
 
-<!-- AUDIO (no controls = no box) -->
+<!-- AUDIO -->
 <audio id="bgAudio" preload="auto" loop>
   <source src="vhs.mp3" type="audio/mpeg">
 </audio>
@@ -97,11 +138,9 @@ Discord
 <script>
 const audio = document.getElementById("bgAudio");
 audio.volume = 0.2;
-audio.load();
 
-// start on first interaction anywhere
 function startAudio() {
-    audio.play().catch(err => console.log(err));
+    audio.play().catch(() => {});
 }
 
 window.addEventListener("click", startAudio, { once: true });
