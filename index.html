@@ -10,16 +10,21 @@ html, body {
 margin: 0;
 height: 100%;
 overflow: hidden;
-background: black;
+
+/* MATCHED DARK TONE (not pure black) */
+background: radial-gradient(circle at center,
+#0b0b0b 0%,
+#070707 55%,
+#000000 100%);
+
 display: flex;
-flex-direction: column;
 align-items: center;
 justify-content: center;
-color: white;
 font-family: Arial, sans-serif;
+color: white;
 }
 
-/* subtle vignette overlay */
+/* subtle vignette so it blends with GIF edges */
 body::before {
 content: "";
 position: fixed;
@@ -28,13 +33,13 @@ left: 0;
 width: 100%;
 height: 100%;
 pointer-events: none;
-background: radial-gradient(circle at center,
-rgba(0,0,0,0) 40%,
-rgba(0,0,0,0.6) 100%);
+background: radial-gradient(circle,
+rgba(0,0,0,0) 45%,
+rgba(0,0,0,0.65) 100%);
 z-index: 0;
 }
 
-/* container stays above everything */
+/* container */
 .container {
 display: flex;
 flex-direction: column;
@@ -44,24 +49,25 @@ position: relative;
 z-index: 2;
 }
 
-/* GIF styling (fade edges + glow) */
+/* GIF styling (blend into background perfectly) */
 img {
 max-width: 80%;
 max-height: 60vh;
 object-fit: contain;
 
-/* glow effect */
-filter: drop-shadow(0 0 25px rgba(255,255,255,0.08));
+/* soft glow so it “belongs” to the background */
+filter: drop-shadow(0 0 35px rgba(255,255,255,0.06));
 
-/* fade edges into black */
+/* smooth fade into background */
 mask-image: radial-gradient(circle,
-rgba(0,0,0,1) 55%,
+rgba(0,0,0,1) 60%,
 rgba(0,0,0,0) 100%);
 -webkit-mask-image: radial-gradient(circle,
-rgba(0,0,0,1) 55%,
+rgba(0,0,0,1) 60%,
 rgba(0,0,0,0) 100%);
 }
 
+/* socials */
 .socials {
 margin-top: 20px;
 display: flex;
@@ -76,7 +82,7 @@ text-decoration: none;
 color: white;
 font-size: 16px;
 padding: 8px 12px;
-border: 1px solid white;
+border: 1px solid rgba(255,255,255,0.6);
 border-radius: 8px;
 transition: 0.2s;
 }
@@ -91,14 +97,14 @@ width: 18px;
 height: 18px;
 }
 
-/* optional subtle flicker vibe */
+/* ultra subtle VHS flicker */
 body {
-animation: flicker 6s infinite;
+animation: flicker 8s infinite;
 }
 
 @keyframes flicker {
 0%, 100% { opacity: 1; }
-50% { opacity: 0.98; }
+50% { opacity: 0.995; }
 52% { opacity: 1; }
 }
 </style>
