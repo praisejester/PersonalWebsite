@@ -13,6 +13,35 @@ overflow: hidden;
 background: #050505;
 color: white;
 font-family: Arial, sans-serif;
+cursor: none;
+}
+
+/* ================= CURSOR ================= */
+#cursor {
+position: fixed;
+top: 0;
+left: 0;
+width: 10px;
+height: 10px;
+border-radius: 50%;
+background: white;
+mix-blend-mode: difference;
+pointer-events: none;
+z-index: 9999;
+
+transform: translate(-50%, -50%);
+box-shadow: 0 0 10px rgba(255,255,255,0.4);
+
+animation: cursorFlicker 1.2s infinite;
+}
+
+@keyframes cursorFlicker {
+0%   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+20%  { opacity: 0.6; }
+40%  { opacity: 1; transform: translate(-50%, -50%) scale(1.3); }
+60%  { opacity: 0.4; }
+80%  { opacity: 1; transform: translate(-50%, -50%) scale(0.9); }
+100% { opacity: 1; }
 }
 
 /* ================= BOOT ================= */
@@ -59,7 +88,6 @@ z-index: 998;
 pointer-events: none;
 }
 
-/* each fracture line */
 .tear-line {
 position: absolute;
 left: 0;
@@ -209,7 +237,10 @@ height: 18px;
 
 <body>
 
-<!-- MULTI TEAR SYSTEM -->
+<!-- CURSOR -->
+<div id="cursor"></div>
+
+<!-- MULTI TEAR -->
 <div id="tear">
   <div class="tear-line tear1"></div>
   <div class="tear-line tear2"></div>
@@ -252,15 +283,15 @@ Discord
 
 </div>
 
-<!-- SCRIPT -->
 <script>
 const boot = document.getElementById("boot");
 const tear = document.getElementById("tear");
+const cursor = document.getElementById("cursor");
 
-/* boot glitch start */
+/* boot glitch */
 setTimeout(() => boot.classList.add("glitch"), 1000);
 
-/* trigger multi-tear */
+/* tear trigger */
 setTimeout(() => {
   tear.classList.add("active");
 }, 1900);
@@ -269,6 +300,27 @@ setTimeout(() => {
 setTimeout(() => {
   boot.remove();
 }, 2600);
+
+/* cursor follow */
+let mouseX = 0, mouseY = 0;
+let curX = 0, curY = 0;
+
+window.addEventListener("mousemove", (e) => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+});
+
+function animateCursor() {
+  curX += (mouseX - curX) * 0.12;
+  curY += (mouseY - curY) * 0.12;
+
+  cursor.style.left = curX + "px";
+  cursor.style.top = curY + "px";
+
+  requestAnimationFrame(animateCursor);
+}
+
+animateCursor();
 </script>
 
 </body>
