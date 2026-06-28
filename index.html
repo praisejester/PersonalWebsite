@@ -29,81 +29,11 @@ font-family: "Courier New", monospace;
 font-size: 14px;
 letter-spacing: 4px;
 text-transform: uppercase;
-animation: bootFade 2.8s forwards;
-}
-
-#boot.glitch #boot-text {
-animation: bootShake 0.08s infinite;
-}
-
-@keyframes bootShake {
-0% { transform: translate(0,0); }
-25% { transform: translate(-2px,1px); }
-50% { transform: translate(2px,-1px); }
-75% { transform: translate(-1px,0); }
-100% { transform: translate(0,0); }
-}
-
-@keyframes bootFade {
-0%   { opacity: 1; }
-75%  { opacity: 1; }
-99%  { opacity: 0; }
-100% { opacity: 0; visibility: hidden; pointer-events: none; }
 }
 
 #boot-text {
 display: inline-block;
 white-space: nowrap;
-position: relative;
-}
-
-#boot-text::before,
-#boot-text::after {
-content: attr(data-text);
-position: absolute;
-left: 0;
-top: 0;
-width: 100%;
-height: 100%;
-opacity: 0;
-}
-
-#boot-text::before {
-color: #050505;
-text-shadow: 2px 0 #050505;
-animation: glitchTop 3s infinite linear;
-clip-path: polygon(0 0, 100% 0, 100% 40%, 0 40%);
-}
-
-#boot-text::after {
-color: #050505;
-text-shadow: -2px 0 #050505;
-animation: glitchBot 3s infinite linear;
-clip-path: polygon(0 60%, 100% 60%, 100% 100%, 0 100%);
-}
-
-@keyframes glitchTop {
-0%   { opacity: 0; transform: translate(0, 0); }
-10%  { opacity: 0; }
-11%  { opacity: 1; transform: translate(-3px, -2px); }
-13%  { opacity: 1; transform: translate(3px, 0); }
-15%  { opacity: 0; transform: translate(0, 0); }
-40%  { opacity: 0; }
-41%  { opacity: 1; transform: translate(2px, -1px); }
-43%  { opacity: 0; }
-100% { opacity: 0; }
-}
-
-@keyframes glitchBot {
-0%   { opacity: 0; transform: translate(0, 0); }
-20%  { opacity: 0; }
-21%  { opacity: 1; transform: translate(3px, 2px); }
-23%  { opacity: 1; transform: translate(-3px, 0); }
-25%  { opacity: 0; transform: translate(0, 0); }
-60%  { opacity: 0; }
-61%  { opacity: 1; transform: translate(-2px, 1px); }
-63%  { opacity: 0; }
-100% { opacity: 0; }
 }
 
 #progress-wrap {
@@ -122,34 +52,6 @@ width: 0%;
 background: white;
 border-radius: 2px;
 box-shadow: 0 0 6px rgba(255,255,255,0.6);
-animation: fillBar 1.8s ease forwards;
-animation-delay: 0.2s;
-}
-
-@keyframes fillBar {
-0%   { width: 0%; }
-100% { width: 100%; }
-}
-
-#glitch-reveal {
-position: fixed;
-inset: 0;
-z-index: 998;
-pointer-events: none;
-background: #050505;
-opacity: 0;
-animation: revealGlitch 0.6s ease forwards;
-animation-delay: 2.75s;
-}
-
-@keyframes revealGlitch {
-0%   { opacity: 1; clip-path: inset(0 0 0 0); }
-15%  { clip-path: inset(10% 0 60% 0); transform: translate(-4px, 0); }
-30%  { clip-path: inset(40% 0 20% 0); transform: translate(4px, 0); }
-50%  { clip-path: inset(0 0 80% 0); transform: translate(-2px, 0); }
-70%  { clip-path: inset(70% 0 0% 0); transform: translate(3px, 0); }
-90%  { clip-path: inset(0 0 0 0); transform: translate(0, 0); opacity: 0.4; }
-100% { opacity: 0; clip-path: inset(0 0 0 0); }
 }
 
 .bg {
@@ -214,14 +116,7 @@ z-index: 5;
 display: flex;
 flex-direction: column;
 align-items: center;
-opacity: 0;
-animation: contentFadeIn 0.6s ease forwards;
-animation-delay: 3s;
-}
-
-@keyframes contentFadeIn {
-0%   { opacity: 0; }
-100% { opacity: 1; }
+visibility: hidden;
 }
 
 .socials {
@@ -259,13 +154,11 @@ height: 18px;
 <body>
 
 <div id="boot">
-  <span id="boot-text" data-text="praisejester">praisejester</span>
+  <span id="boot-text">praisejester</span>
   <div id="progress-wrap">
     <div id="progress-bar"></div>
   </div>
 </div>
-
-<div id="glitch-reveal"></div>
 
 <div class="bg">
   <img src="https://i.pinimg.com/originals/8e/db/ed/8edbeddba6976c96b582e546aede2b44.gif">
@@ -274,7 +167,7 @@ height: 18px;
 <div class="overlay"></div>
 <div class="noise"></div>
 
-<div class="container">
+<div class="container" id="main">
   <div class="socials">
 
     <a href="https://github.com/praisejester" target="_blank">
@@ -298,20 +191,32 @@ height: 18px;
 const boot = document.getElementById("boot");
 const bootText = document.getElementById("boot-text");
 const progressWrap = document.getElementById("progress-wrap");
+const main = document.getElementById("main");
+const bar = document.getElementById("progress-bar");
 
-function syncBarWidth() {
-  progressWrap.style.width = bootText.offsetWidth + "px";
+// match bar to text width
+progressWrap.style.width = bootText.offsetWidth + "px";
+
+// animate bar with JS so we control exact timing
+let start = null;
+const duration = 1800;
+function animateBar(ts) {
+  if (!start) start = ts;
+  const progress = Math.min((ts - start) / duration, 1);
+  bar.style.width = (progress * 100) + "%";
+  if (progress < 1) requestAnimationFrame(animateBar);
 }
-syncBarWidth();
-window.addEventListener("resize", syncBarWidth);
+requestAnimationFrame(animateBar);
 
-setTimeout(() => boot.classList.add("glitch"), 1000);
+// fade out boot then instantly show main
 setTimeout(() => {
+  boot.style.transition = "opacity 0.4s ease";
   boot.style.opacity = "0";
-  boot.style.visibility = "hidden";
-  boot.style.pointerEvents = "none";
-}, 2750);
-setTimeout(() => boot.remove(), 2800);
+  setTimeout(() => {
+    boot.remove();
+    main.style.visibility = "visible";
+  }, 400);
+}, 2000);
 </script>
 
 </body>
