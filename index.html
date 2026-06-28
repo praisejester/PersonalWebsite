@@ -15,7 +15,7 @@ color: white;
 font-family: Arial, sans-serif;
 }
 
-/* BOOT SCREEN */
+/* ================= BOOT ================= */
 #boot {
 position: fixed;
 inset: 0;
@@ -27,45 +27,85 @@ z-index: 999;
 
 font-family: "Courier New", monospace;
 font-size: 14px;
-letter-spacing: 3px;
+letter-spacing: 4px;
 text-transform: uppercase;
 
-/* smoother timing */
-animation: bootFade 2.6s forwards;
-will-change: opacity;
+animation: bootFade 2.4s forwards;
 }
 
-/* glitch text flicker layer */
 #boot.glitch {
-animation: glitchFlash 0.15s infinite;
+animation: bootShake 0.08s infinite;
 }
 
-@keyframes glitchFlash {
-0% { transform: translate(0,0); filter: brightness(1); }
-20% { transform: translate(-2px,1px); }
-40% { transform: translate(2px,-1px); filter: contrast(2); }
-60% { transform: translate(-1px,0px); }
-80% { transform: translate(1px,1px); }
-100% { transform: translate(0,0); filter: brightness(1); }
+@keyframes bootShake {
+0% { transform: translate(0,0); }
+25% { transform: translate(-2px,1px); }
+50% { transform: translate(2px,-1px); }
+75% { transform: translate(-1px,0); }
+100% { transform: translate(0,0); }
 }
 
 @keyframes bootFade {
 0% { opacity: 1; }
-65% { opacity: 1; }
-85% { opacity: 0; }
-100% {
-opacity: 0;
-visibility: hidden;
+70% { opacity: 1; }
+100% { opacity: 0; visibility: hidden; }
+}
+
+/* ================= MULTI TEAR ================= */
+#tear {
+position: fixed;
+inset: 0;
+z-index: 998;
 pointer-events: none;
+}
+
+/* each fracture line */
+.tear-line {
+position: absolute;
+left: 0;
+width: 100%;
+height: 3px;
+background: black;
+transform: scaleX(0);
+opacity: 1;
+}
+
+#tear.active .tear-line {
+animation: tearOpen 0.7s ease forwards;
+}
+
+.tear1 { top: 12%; animation-delay: 0.05s; }
+.tear2 { top: 30%; animation-delay: 0.12s; }
+.tear3 { top: 50%; animation-delay: 0.18s; }
+.tear4 { top: 70%; animation-delay: 0.24s; }
+.tear5 { top: 88%; animation-delay: 0.30s; }
+
+@keyframes tearOpen {
+0% {
+transform: scaleX(0);
+opacity: 1;
+}
+
+40% {
+transform: scaleX(1.2);
+}
+
+70% {
+transform: scaleX(1);
+}
+
+100% {
+transform: scaleX(0);
+opacity: 0;
 }
 }
 
-/* BACKGROUND */
+/* ================= BACKGROUND ================= */
 .bg {
 position: fixed;
 inset: 0;
-overflow: hidden;
 z-index: 0;
+overflow: hidden;
 }
 
 .bg img {
@@ -73,12 +113,10 @@ position: absolute;
 bottom: 0;
 left: 50%;
 transform: translateX(-50%);
-width: auto;
 height: 100%;
 min-width: 110%;
 object-fit: cover;
 object-position: bottom;
-filter: blur(1px) brightness(0.55) contrast(1.1);
 }
 
 /* OVERLAY */
@@ -101,8 +139,8 @@ pointer-events: none;
 
 background: repeating-linear-gradient(
 to bottom,
-rgba(255,255,255,0.02),
-rgba(255,255,255,0.02) 1px,
+rgba(255,255,255,0.03),
+rgba(255,255,255,0.03) 1px,
 transparent 3px,
 transparent 6px
 );
@@ -116,13 +154,12 @@ position: fixed;
 inset: 0;
 z-index: 3;
 pointer-events: none;
-
 background: url("https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Random_Noise.png");
 opacity: 0.03;
 mix-blend-mode: overlay;
 }
 
-/* CONTENT */
+/* ================= CONTENT ================= */
 .container {
 position: absolute;
 top: 46%;
@@ -135,7 +172,6 @@ flex-direction: column;
 align-items: center;
 }
 
-/* SOCIALS */
 .socials {
 margin-top: 18px;
 display: flex;
@@ -146,7 +182,6 @@ a {
 display: flex;
 align-items: center;
 gap: 8px;
-
 text-decoration: none;
 color: white;
 
@@ -158,7 +193,6 @@ text-transform: uppercase;
 padding: 8px 12px;
 border: 1px solid rgba(255,255,255,0.4);
 border-radius: 8px;
-transition: 0.2s;
 }
 
 a:hover {
@@ -175,8 +209,19 @@ height: 18px;
 
 <body>
 
+<!-- MULTI TEAR SYSTEM -->
+<div id="tear">
+  <div class="tear-line tear1"></div>
+  <div class="tear-line tear2"></div>
+  <div class="tear-line tear3"></div>
+  <div class="tear-line tear4"></div>
+  <div class="tear-line tear5"></div>
+</div>
+
+<!-- BOOT -->
 <div id="boot">INITIALIZING SYSTEM...</div>
 
+<!-- BACKGROUND -->
 <div class="bg">
   <img src="https://i.pinimg.com/originals/8e/db/ed/8edbeddba6976c96b582e546aede2b44.gif">
 </div>
@@ -184,6 +229,7 @@ height: 18px;
 <div class="overlay"></div>
 <div class="noise"></div>
 
+<!-- CONTENT -->
 <div class="container">
 
 <div class="socials">
@@ -206,18 +252,23 @@ Discord
 
 </div>
 
+<!-- SCRIPT -->
 <script>
 const boot = document.getElementById("boot");
+const tear = document.getElementById("tear");
 
-/* start glitch phase before fade */
+/* boot glitch start */
+setTimeout(() => boot.classList.add("glitch"), 1000);
+
+/* trigger multi-tear */
 setTimeout(() => {
-  boot.classList.add("glitch");
-}, 1400);
+  tear.classList.add("active");
+}, 1900);
 
-/* remove boot cleanly after animation */
+/* remove boot */
 setTimeout(() => {
   boot.remove();
-}, 2700);
+}, 2600);
 </script>
 
 </body>
