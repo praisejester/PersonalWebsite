@@ -29,7 +29,6 @@ font-family: "Courier New", monospace;
 font-size: 14px;
 letter-spacing: 4px;
 text-transform: uppercase;
-animation: bootFade 2.8s forwards;
 }
 
 #boot.glitch #boot-text {
@@ -42,13 +41,6 @@ animation: bootShake 0.08s infinite;
 50% { transform: translate(2px,-1px); }
 75% { transform: translate(-1px,0); }
 100% { transform: translate(0,0); }
-}
-
-@keyframes bootFade {
-0%   { opacity: 1; }
-75%  { opacity: 1; }
-99%  { opacity: 0; }
-100% { opacity: 0; visibility: hidden; pointer-events: none; }
 }
 
 #boot-text {
@@ -72,8 +64,8 @@ width: 0%;
 background: white;
 border-radius: 2px;
 box-shadow: 0 0 6px rgba(255,255,255,0.6);
-animation: fillBar 1.8s ease forwards;
-animation-delay: 0.2s;
+animation: fillBar 0.9s ease forwards;
+animation-delay: 0.1s;
 }
 
 @keyframes fillBar {
@@ -143,6 +135,7 @@ z-index: 5;
 display: flex;
 flex-direction: column;
 align-items: center;
+visibility: hidden;
 }
 
 .socials {
@@ -194,7 +187,7 @@ height: 18px;
 <div class="overlay"></div>
 <div class="noise"></div>
 
-<div class="container">
+<div class="container" id="main">
 <div class="socials">
 
 <a href="https://github.com/praisejester" target="_blank">
@@ -218,6 +211,7 @@ Discord
 const boot = document.getElementById("boot");
 const bootText = document.getElementById("boot-text");
 const progressWrap = document.getElementById("progress-wrap");
+const main = document.getElementById("main");
 
 function syncBarWidth() {
   progressWrap.style.width = bootText.offsetWidth + "px";
@@ -225,13 +219,24 @@ function syncBarWidth() {
 syncBarWidth();
 window.addEventListener("resize", syncBarWidth);
 
-setTimeout(() => boot.classList.add("glitch"), 1000);
+setTimeout(() => boot.classList.add("glitch"), 600);
+
 setTimeout(() => {
+  bootText.style.transition = "opacity 0.2s ease";
+  bootText.style.opacity = "0";
+  progressWrap.style.transition = "opacity 0.2s ease";
+  progressWrap.style.opacity = "0";
+}, 1000);
+
+setTimeout(() => {
+  boot.style.transition = "opacity 0.4s ease";
   boot.style.opacity = "0";
-  boot.style.visibility = "hidden";
-  boot.style.pointerEvents = "none";
-}, 2750);
-setTimeout(() => boot.remove(), 2800);
+}, 1200);
+
+setTimeout(() => {
+  boot.remove();
+  main.style.visibility = "visible";
+}, 1200);
 </script>
 
 </body>
