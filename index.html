@@ -76,19 +76,21 @@ animation-delay: 0.1s;
 .bg {
 position: fixed;
 inset: 0;
-z-index: 0;
 overflow: hidden;
+z-index: 0;
 }
 
 .bg video {
-    position: absolute;
-    top: -2%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 105%;
-    height: 105%;
-    object-fit: cover;
-    object-position: top center;
+position: absolute;
+left: 50%;
+top: 50%;
+transform: translate(-50%, -50%);
+width: auto;
+height: 125%;
+min-width: 100%;
+min-height: 100%;
+object-fit: cover;
+object-position: center;
 }
 
 .overlay {
@@ -128,7 +130,7 @@ mix-blend-mode: overlay;
 
 .container {
 position: absolute;
-top: 46%;
+top: 44%;
 left: 50%;
 transform: translate(-50%, -50%);
 z-index: 5;
