@@ -71,7 +71,17 @@ font-size: 14px;
 letter-spacing: 4px;
 text-transform: uppercase;
 
-animation: bootFade 2.4s forwards;
+opacity: 1;
+transition: opacity 0.8s ease;
+}
+
+#boot.glitch {
+animation: bootShake 0.08s infinite;
+}
+
+#boot.fade {
+opacity: 0;
+pointer-events: none;
 }
 
 #boot.glitch {
@@ -283,26 +293,44 @@ const boot = document.getElementById("boot");
 const tear = document.getElementById("tear");
 const cursor = document.getElementById("cursor");
 
-setTimeout(() => boot.classList.add("glitch"), 1000);
-setTimeout(() => tear.classList.add("active"), 1900);
-setTimeout(() => boot.remove(), 2600);
+/* Boot glitch */
+setTimeout(() => {
+    boot.classList.add("glitch");
+}, 1000);
 
-let mouseX = 0, mouseY = 0;
-let curX = 0, curY = 0;
+/* Tear effect */
+setTimeout(() => {
+    tear.classList.add("active");
+}, 1900);
+
+/* Smooth fade out */
+setTimeout(() => {
+    boot.classList.add("fade");
+}, 1800);
+
+/* Remove boot after fade finishes */
+setTimeout(() => {
+    boot.remove();
+}, 2600);
+
+let mouseX = 0,
+    mouseY = 0;
+let curX = 0,
+    curY = 0;
 
 window.addEventListener("mousemove", (e) => {
-  mouseX = e.clientX;
-  mouseY = e.clientY;
+    mouseX = e.clientX;
+    mouseY = e.clientY;
 });
 
 function animateCursor() {
-  curX += (mouseX - curX) * 0.12;
-  curY += (mouseY - curY) * 0.12;
+    curX += (mouseX - curX) * 0.12;
+    curY += (mouseY - curY) * 0.12;
 
-  cursor.style.left = curX + "px";
-  cursor.style.top = curY + "px";
+    cursor.style.left = curX + "px";
+    cursor.style.top = curY + "px";
 
-  requestAnimationFrame(animateCursor);
+    requestAnimationFrame(animateCursor);
 }
 
 animateCursor();
