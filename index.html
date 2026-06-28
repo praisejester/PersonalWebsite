@@ -13,43 +13,6 @@ overflow: hidden;
 background: #050505;
 color: white;
 font-family: Arial, sans-serif;
-cursor: none;
-}
-
-*,
-*::before,
-*::after {
-cursor: none !important;
-}
-
-a, a:hover, a:active, a:focus,
-button, input {
-cursor: none !important;
-}
-
-#cursor {
-position: fixed;
-top: 0;
-left: 0;
-width: 10px;
-height: 10px;
-border-radius: 50%;
-background: white;
-mix-blend-mode: difference;
-pointer-events: none;
-z-index: 9999;
-transform: translate(-50%, -50%);
-box-shadow: 0 0 10px rgba(255,255,255,0.4);
-animation: cursorFlicker 1.2s infinite;
-}
-
-@keyframes cursorFlicker {
-0%   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-20%  { opacity: 0.6; }
-40%  { opacity: 1; transform: translate(-50%, -50%) scale(1.3); }
-60%  { opacity: 0.4; }
-80%  { opacity: 1; transform: translate(-50%, -50%) scale(0.9); }
-100% { opacity: 1; }
 }
 
 #boot {
@@ -93,7 +56,6 @@ white-space: nowrap;
 }
 
 #progress-wrap {
-width: 0;
 height: 2px;
 background: rgba(255,255,255,0.15);
 position: relative;
@@ -217,10 +179,8 @@ height: 18px;
 
 <body>
 
-<div id="cursor"></div>
-
 <div id="boot">
-  <span id="boot-text">INITIALIZING SYSTEM...</span>
+  <span id="boot-text">praisejester</span>
   <div id="progress-wrap">
     <div id="progress-bar"></div>
   </div>
@@ -257,7 +217,6 @@ Discord
 const boot = document.getElementById("boot");
 const bootText = document.getElementById("boot-text");
 const progressWrap = document.getElementById("progress-wrap");
-const cursor = document.getElementById("cursor");
 
 function syncBarWidth() {
   progressWrap.style.width = bootText.offsetWidth + "px";
@@ -267,24 +226,6 @@ window.addEventListener("resize", syncBarWidth);
 
 setTimeout(() => boot.classList.add("glitch"), 1000);
 setTimeout(() => boot.remove(), 2900);
-
-let mouseX = 0, mouseY = 0;
-let curX = 0, curY = 0;
-
-window.addEventListener("mousemove", (e) => {
-  mouseX = e.clientX;
-  mouseY = e.clientY;
-});
-
-function animateCursor() {
-  curX += (mouseX - curX) * 0.12;
-  curY += (mouseY - curY) * 0.12;
-  cursor.style.left = curX + "px";
-  cursor.style.top = curY + "px";
-  requestAnimationFrame(animateCursor);
-}
-
-animateCursor();
 </script>
 
 </body>
