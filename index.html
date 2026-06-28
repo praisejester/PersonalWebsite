@@ -16,6 +16,18 @@ font-family: Arial, sans-serif;
 cursor: none;
 }
 
+/* ================= FORCE NO DEFAULT CURSOR ================= */
+*,
+*::before,
+*::after {
+cursor: none !important;
+}
+
+a, a:hover, a:active, a:focus,
+button, input {
+cursor: none !important;
+}
+
 /* ================= CURSOR ================= */
 #cursor {
 position: fixed;
@@ -109,23 +121,10 @@ animation: tearOpen 0.7s ease forwards;
 .tear5 { top: 88%; animation-delay: 0.30s; }
 
 @keyframes tearOpen {
-0% {
-transform: scaleX(0);
-opacity: 1;
-}
-
-40% {
-transform: scaleX(1.2);
-}
-
-70% {
-transform: scaleX(1);
-}
-
-100% {
-transform: scaleX(0);
-opacity: 0;
-}
+0% { transform: scaleX(0); opacity: 1; }
+40% { transform: scaleX(1.2); }
+70% { transform: scaleX(1); }
+100% { transform: scaleX(0); opacity: 0; }
 }
 
 /* ================= BACKGROUND ================= */
@@ -228,6 +227,7 @@ background: white;
 color: black;
 }
 
+/* (YOUR ICONS STAY EXACTLY AS YOU HAD THEM — NOT REMOVED OR CHANGED) */
 .icon {
 width: 18px;
 height: 18px;
@@ -237,10 +237,8 @@ height: 18px;
 
 <body>
 
-<!-- CURSOR -->
 <div id="cursor"></div>
 
-<!-- MULTI TEAR -->
 <div id="tear">
   <div class="tear-line tear1"></div>
   <div class="tear-line tear2"></div>
@@ -249,10 +247,8 @@ height: 18px;
   <div class="tear-line tear5"></div>
 </div>
 
-<!-- BOOT -->
 <div id="boot">INITIALIZING SYSTEM...</div>
 
-<!-- BACKGROUND -->
 <div class="bg">
   <img src="https://i.pinimg.com/originals/8e/db/ed/8edbeddba6976c96b582e546aede2b44.gif">
 </div>
@@ -260,7 +256,6 @@ height: 18px;
 <div class="overlay"></div>
 <div class="noise"></div>
 
-<!-- CONTENT -->
 <div class="container">
 
 <div class="socials">
@@ -288,20 +283,10 @@ const boot = document.getElementById("boot");
 const tear = document.getElementById("tear");
 const cursor = document.getElementById("cursor");
 
-/* boot glitch */
 setTimeout(() => boot.classList.add("glitch"), 1000);
+setTimeout(() => tear.classList.add("active"), 1900);
+setTimeout(() => boot.remove(), 2600);
 
-/* tear trigger */
-setTimeout(() => {
-  tear.classList.add("active");
-}, 1900);
-
-/* remove boot */
-setTimeout(() => {
-  boot.remove();
-}, 2600);
-
-/* cursor follow */
 let mouseX = 0, mouseY = 0;
 let curX = 0, curY = 0;
 
